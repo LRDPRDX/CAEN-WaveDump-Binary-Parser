@@ -23,5 +23,5 @@ Report bugs or suggest to paradox1859@gmail.com
 # Test plot
 As a test you can see the plot of a waveform stored in a binary data file (the code is available here: `example/ROOT/draw/`):
 <p float="left">
-  <img src="https://github.com/LRDPRDX/OWON-Oscilloscope-Parser/blob/master/example/TDS/pictures/csi_tl_parser.png" height="250">
+  <img src="https://github.com/LRDPRDX/CAEN-Binary-Parser/blob/master/pictures/example/single_dat.pdf" height="500">
 </p>
