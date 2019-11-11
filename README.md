@@ -18,4 +18,4 @@ Report bugs or suggest to paradox1859@gmail.com
 
 # TODO's
 - [ ] Create a class to draw waveforms
-- [ ] Add a real example of using `TreeCreator` 
+- [ ] Add a real example of using `CaenTreeCreator` 
