@@ -19,3 +19,9 @@ Report bugs or suggest to paradox1859@gmail.com
 # TODO's
 - [ ] Create a class to draw waveforms
 - [ ] Add a real example of using `CaenTreeCreator` 
+
+# Test plot
+As a test you can see the plot of a waveform stored in a binary data file (the code is available here: `example/ROOT/draw/`):
+<p float="left">
+  <img src="https://github.com/LRDPRDX/OWON-Oscilloscope-Parser/blob/master/example/TDS/pictures/csi_tl_parser.png" height="250">
+</p>
