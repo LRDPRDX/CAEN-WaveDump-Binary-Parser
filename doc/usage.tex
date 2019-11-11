@@ -1,0 +1,412 @@
+\newpage
+\section{Usage}
+\subsection{Stand-alone}
+\subsubsection{Entire structure}\label{ssec:ent_str}
+In order to prevent name conflicts and keep global scope clean everything is placed into
+namespace \codet{caen}.
+
+This chapter covers two forms of usage:
+\begin{itemize}
+    \item as a stand-alone pure C++ software
+    \item as a part of the software based on the \textbf{ROOT CERN} framework
+\end{itemize}
+
+\Note{In the below code the \codet{using} declaration is \emph{not}
+assumed so each entity of the library appears with the \codet{caen::} prefix.}
+
+So far there are three main classes on the scene. Those are: \codet{Event}, \codet{Parser},
+\codet{Analyzer}.
+The diagram on Fig.\ref{fig:diag} illustrates how they interact. 
+
+\input{./tikz/structure.tex}
+
+In this section one will find a brief description of the abovementioned classes and how to work with them.
+For more details see sec~\ref{sec:ref}.
+
+\paragraph*{\codet{Event} class.}
+
+The \codet{Event} class represents a single event. It serves to store primary information
+of an event: its size, trigger time tag, ..., and data points. Also it has some additional 
+member functions that might be useful (see sec.\ref{sec:ref}).
+
+One usually needs only one instance of this class (see below).
+
+\paragraph*{\codet{Parser} class.}
+
+The \codet{Parser} class is designed for event construction. More precisely it takes
+an empty event and \emph{fill} it according to the data in a binary file produced by
+\blt{WD}.
+
+\paragraph*{\codet{Analyzer} class.}
+
+The \codet{Analyzer} class is designed for (no surprise) performing simple analysis on the
+event data. Unlike the \codet{Parser} class this class deals with events which are already 
+constructed and filled by the \codet{Parser} object.
+\codet{Analyzer} \emph{doesn't change an event}. In other words, events are read-only for
+\codet{Analyzer}. 
+
+\paragraph*{\codet{Board} class.}
+There is one more class which must be mentioned. It is the \codet{Board} class. It
+represents a digitizer's model and serves as a translator between abstract
+digital and physical scales. For example, the same waveform may be of different length
+(having the same number of points) depending on a digitizer which produced it because
+the length (or sample time) depends on the sample rate. 
+
+\subsubsection{Read an event}
+In order to be able to read an event from \blt{WD}'s binary file user should follow these
+steps: 
+\begin{enumerate}
+    \item Choose correct digitizer's model 
+    \item Create \codet{Parser} object
+    \item Set path to file to parse using \codet{Parser::SetPathToFile} member function
+    \item Create \codet{Event} object
+    \item Call \codet{Parser::ReadEvent} or \codet{Parser::ReadEventAt} member function
+with previously created \codet{Event} object as an argument
+    \item Use \codet{Event}'s member functions to retrieve information about the read
+event
+    \captionof{algorithm}{Reading an event from a binary}
+\end{enumerate}
+
+\noindent Let us describe each step in detail below.
+
+\paragraph*{Choosing digitizer's model.}
+In order to select digitizer's model user has to pass object of \codet{Board} class
+as an argument to the constructor of \codet{Parser} class (see below). \codet{Board}
+class can be instantiated using either of two constructors. The first one allows
+user to choose a model from a list of known digitizers
+(constructed from \href{https://www.caen.it/subfamilies/digitizers/}{this} list).
+The second one is used when the desired model is not present in the list. For more
+details see sec.\ref{sec:ref}.
+
+\begin{lstlisting}
+#include "CaenParser.h"//CaenBoard.h header included here
+
+caen::Board boardOne( caen::Board::N6720 );//using built-in enum
+caen::Board boardTwo( 12, 250000000, 2.0 );//providing board's characteristics by hand 
+\end{lstlisting}
+
+\Note{If you didn't set the include path as it was recommended in Sec.\ref{sec:inst} you
+would probably have to provide full path in the \codet{include} directive. However, it is
+not the case if you specify the include path (with \codet{-I} option) when compiling.}
+
+\paragraph*{Creating \codet{Parser} object.}
+\codet{Parser} class has the only constructor that takes \codet{Board} object as an
+argument:
+\begin{lstlisting}
+#include "CaenParser.h"
+
+caen::Parser parser( caen::Board::N6720 );//note copy-initialization for Board class
+\end{lstlisting}
+
+\paragraph*{Setting path to binary.}
+Once you have chosen the board's model it's time to specify
+file to work with. Its type must be \codet{std::string}. Most probably the
+name of such file would be \codet{waveN.dat} (unless has been changed by user) where
+\codet{N} is channel number (starts
+from 0):
+\begin{lstlisting}
+parser.SetPathToFile( "path/to/waveN.dat" );//note extension   
+\end{lstlisting}
+The path may be either absolute or relative.
+
+\paragraph*{Creating \codet{Event} object.}
+The \codet{Event} class has the only constructor that takes no arguments:
+\begin{lstlisting}
+#include "CaenEvent.h"
+
+caen::Event event;
+\end{lstlisting}
+
+As it was mentioned in Sec.\ref{ssec:ent_str} one usually needs only one instance of
+each \codet{Event} and \codet{Parser} class. But there are cases when several instances
+are useful (or even necessary). For example, in case when comparing several channels
+is required. As far as \blt{WD} produces separate data file per channel one should have
+its own \codet{Parser} instance for each channel. And as it will be clear from the below
+text in this case one should also use its own \codet{Event} instance for each channel.
+
+\subsubsection*{Reading an event}
+Next step is to read an event from a binary file produced by \blt{WD}. To do this user
+should call \codet{ReadEvent} member function with \codet{Event} object as an argument
+(passed by reference):
+
+\begin{lstlisting}
+parser.ReadEvent( event );
+//OR
+parser.ReadEventAt( 0, event );
+\end{lstlisting}
+
+\codet{ReadEvent} member function returns \codet{true} if the event has been
+successfully read and \codet{false} otherwise. Here are some steps that
+\codet{ReadEvent} member function performs:
+
+\begin{enumerate}
+\item Reset current event
+\item
+    \begin{itemize}
+        \item (\codet{ReadEvent}) Try to read and fill the event from the position
+followed after the end of previous event --- current position indicator (or from
+the beginning of the file in case when no event hasn't been read yet)
+        \item (\codet{ReadEventAt}) Try to read and fill the event from the
+specified position in binary file 
+    \end{itemize}
+\item (\codet{ReadEvent} only) If 2. succeeded then update position indicator
+\end{enumerate}
+
+The above algorithm is not exactly what \codet{ReadEvent} does but here are several things 
+to note. First of all, it \emph{resets the current event}. This means that at the moment
+of invocation of \codet{ReadEvent} member function a variable that was passed to it
+\emph{is no longer stores whatever it did before the invocation} even if reading failed. The second thing to
+note is that \codet{ReadEvent} member function reads one event at a time. You could only
+read events one-by-one, one after another. Every time you want to read new event you must
+invoke \codet{ReadEvent} member function.
+
+
+Eventually the complete program may look like this: 
+\begin{lstlisting}[numbers=left, caption={Print size of each event stored in \codet{waveN.dat} file}]
+#include "CaenParser.h"
+#include "CaenEvent.h"
+
+
+int main()
+{
+    caen::Parser parser( caen::Board::N6720 );
+        parser.SetPathToFile( "path/to/waveN.dat" );
+    caen::Event event;
+
+    while( parser.ReadEvent( event ) )//read event by event
+    {
+        //Information about the current event is accessible
+        //through Event's member functions 
+        std::cout << event.GetSize() << "\n";
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+\subsubsection{Analyse an event}\label{sssec:anal}
+Often having just primary data is not enough. One may need some property of a signal that
+is not in the data file. It might be integral over a given time interval or time point at the maximum
+displacement from the baseline. Those purposes are the \codet{Analyzer} class was written
+for. It is defined in \codet{CaenAnalyzer.h} file. This class is instantiated by calling the only
+constructor that takes no arguments:
+
+\begin{lstlisting}
+#include "CaenAnalyzer.h"
+
+caen::Analyzer analyzer;
+\end{lstlisting}
+
+In order to perform analysis of an event user calls correspondig mamber function of this
+class with the desired \codet{Event} object as an argument (passed by reference):
+\begin{lstlisting}
+analyzer.Analyze( event );
+\end{lstlisting}
+\paragraph*{Analysis config.}
+However the above line is not enough for complete analysis. User should provide the
+\emph{analysis config}. Some of the calculations use the user-defined parameters. For example, if
+you want to get integral over time of a signal you should specify time range of
+integration. Moreover, in order to calculate integral it is required to know the baseline
+(or zero level). So far \codet{Analyzer} has two simple methods to calculate zero level.
+For both of them user should also specify time range (see Sec.\ref{sec:ref}). So the
+analysis config consists of the following settings (the order is not of importance):
+\begin{itemize}
+    \item{Method to calculate baseline. Now there are two methods (see sec.\ref{sec:ref}).
+Member function to use: \codet{SetBaselineMethod( Analyzer::BASELINE method )}}
+    \item{Time interval for baseline calculation. It starts at the beginning of a signal
+and ends at the time defined by user. Member function to use: \codet{SetBaselineInterval( double T )}}
+    \item{Time interval for integral calculation. It starts and ends at time points defined
+by user. Member function to use: \codet{SetGate( double start, double end )}}
+\end{itemize}
+
+\Note{The analysis config should be done \emph{before} the invocation of \codet{Analyze}
+member function.}
+
+\noindent So the complete program with analysis part usually contains the following lines:
+\begin{lstlisting}[numbers=left, caption={Print integral of each event in \codet{waveN.dat} calculated within the range from 40 to 100 nanosecs}]
+#include "CaenParser.h"
+#include "CaenAnalyzer.h"
+#include "CaenEvent.h"
+
+
+int main()
+{
+    caen::Parser parser( caen::Board::N6720 );
+        parser.SetPathToFile( "path/to/waveN.dat" );
+    caen::Event event;
+    caen::Analyzer analyzer;
+
+    //Analysis config
+    analyzer.SetBaselineInterval( 0.03 );//set range for baseline calcultation: the first 30 ns of the signal
+    analyzer.SetGate( 0.04, 0.1 );//set integral range between 40 and 100 ns
+
+    while( parser.ReadEvent( event ) )
+    {
+        //Perform analysis
+        analyzer.Analyze( event );
+        //Now the results are available through the getters 
+        std::cout << analyzer.GetIntegral() << "\n";
+    }
+
+    return 0;
+}
+
+\end{lstlisting}
+
+\subsubsection{Compilation}
+Provided you put your code in the file named \codet{example.cpp} the following line should compile
+it into \codet{example} executable:
+\begin{lstlisting}
+g++ example.cpp -std=c++11 -I<path/to/package_dir>/inc -lcaenparse -o example 
+\end{lstlisting}
+It is more convenient to put this in a \codet{Makefile} (one may find an example of such
+\codet{Makefile} in \codet{example/stand\tus alone} directory).
+
+\subsection{ROOT-compatible}\label{ssec:ROOT}
+In this section it will be explained how to use this library together with the ROOT CERN
+framework, in particular, how to create a \codet{TTree} from several binary files. Provided
+you have followed the instructions in Sec.~\ref{ssec:install:ROOT} the following algorithm
+should be used to create a \codet{TTree} from a set of a binary files:
+\begin{enumerate}
+    \item Create an instance of the \codet{CaenTreeParser} class using the same \codet{Board}
+        as was used to produce the binary
+    \item Set the analysis config using member-functions of the \codet{CaenTreeCreator} class
+    \item Call the \codet{CreateTree} member-function
+    \item Compile and run
+    \label{algo:tree}
+    \captionof{algorithm}{Creation of a \codet{TTree}}
+\end{enumerate}
+Below is the explanation of the above algorithm in detail. 
+
+\paragraph*{The \codet{CaenTreeCreator} class.} This class is responsible for
+creation of a \codet{TTree} from a data binary file.
+To create an instance of this class you, firstly, include its header:
+\begin{lstlisting}
+#include "ROOT/CaenTreeCreator.h"
+\end{lstlisting}
+Then you use the only constructor of this class which takes four arguments:
+\begin{lstlisting}
+TreeCreator(   caen::Board board,
+               const std::string& pathToDataDir,
+               const std::string& pathToTreeFile,
+               const std::string& treeFileName )
+\end{lstlisting}
+where
+    \begin{itemize}
+        \item[] \codet{board} --- board model which was used to record data 
+        \item[] \codet{pathToDataDir} --- path to the directory containing the binaries (see the NOTE below)
+        \item[] \codet{pathToTreeFile} --- path to the location where the resulting \codet{TTree} will be placed
+        \item[] \codet{treeFileName} --- name of a \codet{.root} file (without an extension) with the resulting \codet{TTree}
+    \end{itemize}
+
+The meaning of the second argument requires additional explanation. There may be two
+cases here. The first is the one when the target directory contains no other directories
+(subdirectories) --- only binary files. I.e. the structure is the following:
+\begin{lstlisting}[language=bash]
+path
+|
+|_to
+  |
+  |_data <--target
+     |
+     |__wave01.dat
+     |__wave02.dat
+     |__...
+\end{lstlisting}
+In this case, provided the second argument in the \codet{CaenTreeCreator} constructor
+was \codet{"path/to/data"}, THE ONLY \codet{TTree} named \codet{tree\tus} would be constructed
+from all the binaries in the \codet{data} directory. If, on the other hand, the target
+directory contains other directories, for example:
+\begin{lstlisting}[language=bash]
+path
+|
+|_to
+  |
+  |_data <--target
+    |
+    |_data1
+    |   | 
+    |   |__wave01.dat
+    |   |__wave02.dat
+    |   |__...
+    |
+    |_data2
+      |
+      |__wave01.dat
+      |__wave01.dat
+      |__...
+\end{lstlisting}
+then, provided the second argument in the \codet{CaenTreeCreator} constructor
+was \codet{"path/to/data"}, TWO \codet{TTree}s named \codet{tree\tus data1} and
+\codet{tree\tus data2} would be constructed from all the binaries in the \codet{data1} and
+\codet{data2} directory (and in its subdirectories), respectively.
+It means that hierarchy of the subdirectories of the target directory doesn't matter:
+all the binaries are searched recursively in a subdirectory of the target directory. I.e.
+the \codet{subsubdata} is expanded when constructing a \codet{TTree} provided the following
+structure:
+\begin{lstlisting}[language=bash]
+path
+|
+|_to
+  |
+  |_data <--target
+    |
+    |_data1 <-- matters
+    |   | 
+    |   |__wave01.dat
+    |   |__wave02.dat
+    |   |__...
+    |
+    |_data2 <--hierarchy matters
+      |
+      |__wave01.dat
+      |__wave02.dat
+      |__...
+      |__subsubdata <-- hierarchy DOESN'T matter: expanded
+         |__wave01.dat
+         |__wave02.dat
+         |__...
+\end{lstlisting}
+However, the path (see below) of the every binary is conserved in the resulting
+\codet{TTree}.
+
+After the instantiating the \codet{CaenTreeCreator} you should set the analysis config
+(see Sec.~\ref{sssec:anal}) which will be used when constructing the \codet{TTree}:
+\begin{lstlisting}
+    tc.SetIntervals( 0.1, 0.05, 0.2 );//baseline - from the beginning to 100 ns; integral - from 50 to 200 ns
+\end{lstlisting}
+
+\Note{Setting the analysis config for the \codet{TreeCreator} class differs slightly from that for the \codet{analyzer} class (see~Sec.\ref{ssec:ref:tree})}
+
+After that you call the \codet{CreateTree} member-function. The whole code could be:
+
+\begin{lstlisting}
+#include "ROOT/CaenTreeCreator.h"
+#include "CaenParser.h"
+
+
+void CreateTree()
+{
+    CaenTreeCreator tc( caen::Board::N6720,               //N6720 ADC was used for recording
+                    , "./Data", "./", "myFirstTree" );
+    tc.SetIntervals( 0.03, 0.03, 0.1 ); //baseline - from 0 to 30 ns; integral - from 30 to 100 ns 
+
+    tc.CreateTree();
+}
+\end{lstlisting}
+
+\paragraph*{Compile and run.} To run the above example create (or append) the \codet{rootlogon.C} file in the directory
+where you put this example with the following line:
+\begin{lstlisting}
+{
+    gSystem->AddLinkedLibs( "path/to/<package_dir>/src/ROOT/CaenTreeCreator/CaenTreeCreator_cpp.so" );
+}
+\end{lstlisting}
+where \codet{/path/to/<package\tus dir>} is the absolute path to the \codet{<package\tus dir>}.
+
+Then type the following in your working directory (it is assumed you have saved the code in the file \codet{CreateTree.C}):
+\begin{lstlisting}
+root -l CreateTree.C+
+\end{lstlisting}
+After that there will appear the file (along with the others) named \codet{myFirstTree.root} in the current directory with a \codet{TTree}. The full example (with the demo data)
+see in the \codet{<package\tus dir>/example/ROOT/create\tus tree} directory.

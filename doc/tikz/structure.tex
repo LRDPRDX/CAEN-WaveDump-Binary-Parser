@@ -1,0 +1,70 @@
+\tikzstyle{emptyclass}=[rectangle, draw=black, rounded corners, fill=white, drop shadow,
+        text centered, anchor=north, text=black, text width=3cm]
+\tikzstyle{fullclass}=[rectangle, draw=black, rounded corners, fill=blue!20, drop shadow,
+        text centered, anchor=north, text=black, text width=3cm]
+\tikzstyle{class}=[rectangle, draw=black, rounded corners, fill=violet!30, drop shadow,
+        text centered, anchor=north, text=white, text width=4cm]
+\tikzstyle{comment}=[rectangle, draw=black, rounded corners, fill=green, drop shadow,
+        text centered, anchor=north, text=white, text width=3cm]
+\tikzstyle{myarrow}=[->, >=triangle 90, thick]
+\tikzstyle{line}=[-, thick]
+        
+\begin{figure}[H]
+\begin{tikzpicture}[node distance=3cm]
+    \node (EmptyEvent) [emptyclass, rectangle split, rectangle split parts=2]
+        {
+            \codet{Event} 
+            \nodepart{second}
+                data is empty
+        };
+    \node (Parser) [class, rectangle split, text width=4.5cm, rectangle split parts=2, right=2cm of EmptyEvent]
+        {
+            \codet{Parser} 
+            \nodepart{second}
+                \begin{itemize}
+                    \item[+] \codet{ReadEvent( Event\& )}                 
+                    \item[+] ...
+                \end{itemize}
+        };
+    \node (FullEvent) [fullclass, rectangle split, rectangle split parts=2, right=2cm of Parser]
+        {
+            \codet{Event} 
+            \nodepart{second}
+                data is filled 
+                \begin{itemize}
+                    \item[+] \codet{cbegin()}
+                    \item[+] \codet{cend()}
+                    \item[+] \codet{GetSize()}
+                    \item[+] ...
+                \end{itemize}
+        };
+    \node (Aux) [text width=3cm, below of=FullEvent] {};
+    \node (EmptyAnalyzer) [emptyclass, text width=5cm, rectangle split, rectangle split parts=2, left=2cm of Aux]
+        {
+            \codet{Analyzer} 
+            \nodepart{second}
+                data is empty
+                \begin{itemize}
+                    \item[+] \codet{Analyze( const Event\& )}
+                \end{itemize}
+        };
+    \node (FullAnalyzer) [fullclass, text width=4cm, rectangle split, rectangle split parts=2, left=2cm of EmptyAnalyzer]
+        {
+            \codet{Analyzer} 
+            \nodepart{second}
+                data is filled 
+                \begin{itemize}
+                    \item[+] \codet{GetBaseline()}
+                    \item[+] \codet{GetIntegral()}
+                    \item[+] ...
+                \end{itemize}
+        };
+    \draw[myarrow] (EmptyEvent.east) -- node[above]{passed by} node[below]{reference} (Parser.west);
+    \draw[myarrow] (Parser.east) -- (FullEvent.west);
+    \draw[] (FullEvent.south) -- (Aux.center);
+    \draw[myarrow] (Aux.center) -- node[above]{passed by} node[below]{reference} (EmptyAnalyzer.east);
+    \draw[myarrow] (EmptyAnalyzer.west) -- (FullAnalyzer.east);
+\end{tikzpicture}
+\caption{Interaction between classes during processing an event.}
+\label{fig:diag}
+\end{figure}

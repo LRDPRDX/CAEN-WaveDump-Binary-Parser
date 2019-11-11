@@ -1,0 +1,902 @@
+\newpage
+\section{Reference guide}\label{sec:ref}
+This reference guide is not considered to be complete. In this section only \codet{public}
+members are explained. This is rather a \emph{usage reference guide}.
+
+\Note{The \codet{caen::} prefix is omitted in the below code}
+
+\subsubsection*{Terminology}
+Object of each class listed below has \emph{a state}. In this context a state of an
+object is simply a set of values of its data members. 
+
+\subsection{Class \codet{Board}}
+Defined in \codet{CaenBoard.h}
+
+\subsubsection*{Description}
+
+\hspace{\parindent} Represents a digitizer's model. Needed to transform digital quantities
+into real time and voltage values specific to concrete digitizer.
+
+\subsubsection*{\codet{public enum}s}
+
+\hspace{\parindent}\codet{Board::MODEL}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Represents a list of known CAEN digitizers\\[5pt]
+    Values: & \codet{DT5720, DT5724, DT5725, DT5730, DT5740, DT5740D, DT5742, DT5743, DT5751, DT5761, N6720, N6724, N6725, N6730, N6740, N6740D, N6742, N6743, N6751, N6761, V1720, V1724, V1725, V1730, V1740, V1740D, V1742, V1743, V1751, V1761, VX1720, VX1724, VX1725, VX1730, VX1740, VX1740D, VX1742, VX1743, VX1751, VX1761}\\[5pt]
+    \bottomrule
+\end{tabularx}
+
+\subsubsection*{\codet{public} members}
+
+\hspace{\parindent}\codet{Board::Board( unsigned resolution, uint64\tus t sampleRate, double FSR ) }
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Constructor\\[5pt]
+    Arguments: &
+        \begin{tabular}[t]{@{\hspace{0em}}l@{}@{\hspace{1em}}l@{}l}
+            \codet{unsigned resolution} - & resolution of a digitizer in bits\\
+            \codet{uint64\tus t sampleRate} - & sampling rate of a digitizer in S/s (samples per second)\\
+            \codet{double FSR} - & full scale range in $\mathrm{V}_{\mathrm{pp}}$
+        \end{tabular}\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{Board::Board( Board::MODEL model ) }
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Constructor\\[5pt]
+    Arguments: &
+        \begin{tabular}[t]{@{\hspace{0em}}l@{}@{\hspace{1em}}l@{}l}
+            \codet{Board::MODEL model} - & model of a digitizer from built-in list (see \codet{public enum}s)\\
+        \end{tabular}\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{unsigned Board::GetResolution() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to get resolution of a digitizer\\[5pt]
+    Return: & Resolution in bits\quad (\codet{unsigned})\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{uint64\tus t Board::GetSampleRate() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to get sample rate of a digitizer\\[5pt]
+    Return: & Sample rate in S/s (samples per second)\quad (\codet{uint64\tus t})\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\newpage
+\vspace{0.5cm}
+\codet{double Board::GetSampleTime() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to get time difference between two neighboring points in a waveform\\[5pt]
+    Return: & Sampling time (in $\mu$s)\quad (\codet{double})\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{double Board::GetFSR() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to get full scale range of a digitizer\\[5pt]
+    Return: & Peak to peak voltage of a full scale range (in volts)\quad (\codet{double})\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{double Board::GetLSB() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to get least significant bit of a digitizer\\[5pt]
+    Return: & Resolution in volts\quad (\codet{double})\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\newpage
+
+\subsection{Struct \codet{Point}}
+Defined in \codet{CaenEvent.h}.
+
+\subsubsection*{Description}
+
+\hspace{\parindent}Represents a single data point in a waveform. Has two public data members: \codet{time} and \codet{voltage}
+
+\subsubsection*{\codet{public} members}
+
+\hspace{\parindent}\codet{Point::Point( double time, double voltage ) }
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Constructor. Not intended to be used by user\\[5pt]
+    Arguments: &
+        \begin{tabular}[t]{@{\hspace{0em}}l@{}@{\hspace{1em}}l@{}l}
+            \codet{double time} - & real time (in $\mu$s) of the point\\
+            \codet{double voltage} - & real voltage (in mV) of the point\\
+        \end{tabular}\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{double Point::time}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Real time (in $\mu$s) of the point in a waveform\\[5pt]
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{double Point::voltage}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Real voltage (in mV) of the point in a waveform\\[5pt]
+    \bottomrule
+\end{tabularx}
+
+\newpage
+\subsection{Class \codet{Event}}
+Defined in \codet{CaenEvent.h}
+
+\subsubsection*{Description}
+
+\hspace{\parindent}Represents a single event --- consists of primary information of an
+event: header (see WDDOC) and data points. Also contains position indicator at which an
+event starts and ends in binary file
+
+\subsubsection*{\codet{public} \codet{typedef}s}
+
+\hspace{\parindent}\codet{typedef typename std::vector<Point>::const\tus iterator const\tus point\tus iterator}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to iterate over data points in a waveform\\[5pt]
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{typedef typename std::fstream::pos\tus type pos\tus t}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Alias for \codet{std::fstream::pos\tus type}\\[5pt]
+    \bottomrule
+\end{tabularx}
+
+\subsubsection*{\codet{public} \codet{enum}s}
+
+\hspace{\parindent}\codet{Event::POLARITY}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Represents signal polarity\\[5pt]
+    Values: & \codet{NEGATIVE,} \codet{POSITIVE}\\[5pt]
+    \bottomrule
+\end{tabularx}
+
+\subsubsection*{\codet{public} members}
+
+\hspace{\parindent}\codet{Event::Event()}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Constructor\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{Event::const\tus point\tus iterator Event::cbegin() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to get the first point of a waveform. \codet{cbegin()} of
+\codet{std::vector<Point>}\\[5pt]
+    Return: & Iterator to the beginning \quad(\codet{std::vector<Point>::const\tus iterator})\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{Event::const\tus point\tus iterator Event::cend() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to check if the end of a waveform has been reached. \codet{cend()}
+of \codet{std::vector<Point>}\\[5pt]
+    Return: & Iterator to the end \quad(\codet{std::vector<Point>::const\tus iterator})\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{void Event::Clear()}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Resets the event. Sets all its data members to their initial values\\[5pt]
+    Return: & None\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{void Event::SetPolarity( Event::POLARITY pol )}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Sets signal polarity. The polarity matters for \codet{Analyzer} when
+calculating integral and extremum points\\[5pt]
+    Return: & None\\[5pt]
+    Arguments: &
+        \begin{tabular}[t]{@{\hspace{0em}}l@{}@{\hspace{1em}}l@{}l}
+            \codet{Event::POLARITY pol} - & polarity of a signal
+        \end{tabular}\\
+    \bottomrule
+\end{tabularx}
+
+\newpage
+\vspace{0.5cm}
+\codet{pos\tus t Event::GetStartPosition() const}
+
+\begin{tabularx}{\textwidth}{rp{13cm}}
+    \toprule
+    Description: & Getting position of the starting byte of the event\\[5pt]
+    Return: & Position in the file where the event starts from if the event has been read
+without errors and \codet{0} otherwise\quad (\codet{pos\tus t})\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{pos\tus t Event::GetEndPosition() const}
+
+\begin{tabularx}{\textwidth}{rp{13cm}}
+    \toprule
+    Description: & Getting position in the file after the last byte of the event\\[5pt]
+    Return: & Position in the file \textbf{next to} the end of the event if the event has been read without errors. \codet{0} otherwise\quad (\codet{pos\tus t})\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{size\tus t Event::GetSize() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to determine number of points in a waveform \\[5pt]
+    Return: & Size of \codet{std::vector<Point> points} data member\quad(\codet{size\tus t})\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{double Event::GetLength() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to get length of recording window in microseconds\\[5pt]
+    Return: & Time duration (in $\mu$s) of a signal\quad(\codet{double})\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{Event::POLARITY Event::GetPolarity() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to get polarity of a signal\\[5pt]
+    Return: & Polarity of a signal\quad(\codet{Event::POLARITY})\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{double Event::GetTimeStep() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to get time difference between two neighboring points in a waveform\\[5pt]
+    Return: & Sampling time (in $\mu$s)\quad(\codet{double})\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{void Event::Print() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Prints the event in a nice human readable form\\[5pt]
+    Return: & None\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{uint32\tus t Event::GetBoardID() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & \\[5pt]
+    Return: & board ID\quad(\codet{uint32\tus t})\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{uint32\tus t Event::GetPattern() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & \\[5pt]
+    Return: & \quad(\codet{uint32\tus t})\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{uint32\tus t Event::GetChannel() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to determine to what input channel the event belongs\\[5pt]
+    Return: & Channel number\quad(\codet{uint32\tus t})\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{uint32\tus t Event::GetEventCounter() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to get counter of the event. NOTE: the first event in a file is not necessarily has count number equal to 0. Also it resets on overflow so several events could have the same value\\[5pt]
+    Return: & Count number of the event\quad(\codet{uint32\tus t})\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{uint32\tus t Event::GetTriggerTimeTag() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & \\[5pt]
+    Return: & \quad(\codet{uint32\tus t})\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\newpage
+\subsection{Class \codet{Parser}}
+Defined in \codet{CaenParser.h}
+
+\subsubsection*{Description}
+This class is designed for processing binary files produced by \blt{WD}. Main function
+of \codet{Parser} class is to translate raw data in \blt{WD}'s binaries into understandable
+information --- events --- represented by \codet{Event} class. 
+
+\subsubsection*{\codet{public} members}
+
+\hspace{\parindent}\codet{Parser::Parser( Board board ) }
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Constructor\\[5pt]
+    Arguments: &
+        \begin{tabular}[t]{@{\hspace{0em}}l@{}@{\hspace{1em}}p{8cm}l}
+            \codet{Board board} - & model of a digitizer
+        \end{tabular}\\
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{void Parser::SetPathToFile( const std::string\& pathToFile )}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Used to specify path to binary file to be working with. NOTE: this member function calls \codet{Reset} member so setting new path changes object's state\\[5pt] 
+    Return: & None\\[5pt]
+    Arguments: &
+        \begin{tabular}[t]{@{\hspace{0em}}l@{}@{\hspace{1em}}p{8cm}l}
+            \codet{const std::string\& pathToFile} - & path to \blt{WD}'s binary file.
+Could be either absolute or relative. NOTE: it must be a full name including the extension if present.
+        \end{tabular}\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{bool Parser::ReadEventAt( pos\tus t pos, Event\& event) const }
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Tries to read the event started from a given position in the file. Note
+\codet{const} specifier. In the context this means that this member doesn't change parser's
+state (in comparison with \codet{ReadEvent} member). Usually used when reading individual
+event.\\[5pt]
+    Return: & \codet{true} if the event has been read and filled successfully. \codet{false} otherwise.\quad(\codet{bool})\\[5pt]
+    Arguments: &
+        \begin{tabular}[t]{@{\hspace{0em}}l@{}@{\hspace{1em}}p{8cm}l}
+            \codet{pos\tus t pos -} & position (absolute) in the file where reading an event should start\\
+            \codet{Event\& event} - & event to be filled\\
+        \end{tabular}\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{bool Parser::ReadEvent( Event\& event) }
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Tries to read the event started from the position \emph{next to} the last
+byte of previously read event. If succeeded this member function \emph{changes} parser's 
+state (in comparison with \codet{ReadEventAt} member): increments number of read events,
+updates position indicator for the next reading, etc. Usually used when reading group
+of events.\\[5pt]
+    Return: & \codet{true} if an event has been read and filled successfully. \codet{false} otherwise.\quad(\codet{bool})\\[5pt]
+    Arguments: &
+        \begin{tabular}[t]{@{\hspace{0em}}l@{}@{\hspace{1em}}p{8cm}l}
+            \codet{Event\& event} - & event to be filled\\
+        \end{tabular}\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{size\tus t Parser::GetNEvents() const} 
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to determine how many events are successfully read so far. \\[5pt]
+    Return: & Current value of \codet{nEvents} data member\quad(\codet{size\tus t})\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{void Parser::Reset()} 
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Sets all data members to their initial values\\[5pt]
+    Return: & None\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\newpage
+\vspace{0.5cm}
+\codet{void Parser::PrintCurrentPosition() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Prints byte-position in the file is being parsed next to the last
+successfully read event in hexadecimal. This member function is used, for example, in
+\codet{ReadEventAt} member function in order to notify user where an error occured
+while trying to parse the file\\[5pt]
+    Return: & None\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{void Parser::Print() const} 
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Prints object in a nice human-readable form\\[5pt]
+    Return: & None\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\newpage
+\subsection{Class \codet{Analyzer}}
+Defined in \codet{CaenAnalyzer.h}
+
+\subsubsection*{Description}
+This class is designed to analyze events. Under analysis it is assumed obtaining some
+\emph{secondary} information about an event: baseline position, integral over a given time
+interval, etc. This class works with \codet{Event} objects in the \emph{read-only} mode i.e. it doesn't change their states.
+
+\subsubsection*{\codet{public} \codet{enum}s}
+
+\hspace{\parindent}\codet{Analyzer::BASELINE}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Enumerates the names of available methods for baseline calculation.\newline
+        \codet{AVERAGE} - Calculate baseline as the average value over a given time interval: $$V_0 = \frac{1}{N_T}\sum_{t_i\in [0, T]}V(t_i),$$ where\newline
+        \phantom{0000}$V(t_i)$ --- voltage at time $t_i$\newline
+        \phantom{0000}$T$ --- time interval in $\mu$s\newline 
+        \phantom{0000}$N_T$ --- number of points within the specified time interval $T$\newline
+
+        \codet{MODE} - Calculate baseline as the most frequent value (mode) in a given time interval\\[5pt]
+    Values: & \codet{AVERAGE, MODE}\\[5pt]
+    \bottomrule
+\end{tabularx}
+
+\subsubsection*{\codet{public} members}
+
+\hspace{\parindent}\codet{Analyzer::Analyzer()}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Constructor\\[5pt]
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{void Analyzer::Analyze( const Event\& event )}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Performs simple analysis on a waveform:\newline
+        \phantom{0000}$\bullet$ baseline calculation\newline
+        \phantom{0000}$\bullet$ integral calculation\newline
+        \phantom{0000}$\bullet$ max and min points searching\newline
+        \phantom{0000}$\bullet$ peak-to-peak calculation\newline
+    After the invocation results of analysis are available through corresponding getterss
+(see below).\newline
+    Note that this member function doesn't change the event's state.
+        \\[5pt]
+    Return: & None\\[5pt]
+    Arguments: &
+        \begin{tabular}[t]{@{\hspace{0em}}l@{}@{\hspace{1em}}p{8cm}l}
+            \codet{const Event\& event -} & event to be analysed
+        \end{tabular}\\
+    \bottomrule
+\end{tabularx}
+
+\newpage
+\vspace{0.5cm}
+\codet{void Analyzer::SetGate( double start, double stop )}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to specify limits of integration. Integration is
+calculated as the sum of point displacements from the baseline:\newline
+        $$\mathrm{integral} = \pm\sum_{t_i \in [\mathrm{start}, \mathrm{stop}]}(V(t_i) - V_0)\Delta t,$$
+        where\newline
+        \phantom{0000}$V(t_i)$ --- voltage at time $t_i$\newline
+        \phantom{0000}$V_0$ --- baseline level\newline
+        \phantom{0000}$\Delta t$ --- sampling time\newline
+        \phantom{0000}The sign --- plus or minus --- depends on a signal polarity and
+is chosen so the integral of unipolar signal is positive.
+        \newline\newline
+    NOTE: There is no check or validation of provided values. For example, if you provided
+incorrect limits such as \codet{start} $>$ \codet{stop} it wouldn't be a warning or
+anything and the integral would be equal to \codet{0}.\\[5pt]
+    Return: & None\\[5pt]
+    Arguments: &
+        \begin{tabular}[t]{@{\hspace{0em}}l@{}@{\hspace{1em}}p{8cm}l}
+            \codet{double start -} & left limit of integration (in $\mu$s)\\
+            \codet{dobule stop - } & right limit of integration (in $\mu$s)
+        \end{tabular}\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{void Analyzer::SetBaselineInterval( double T )}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to specify time interaval which will be used to calculate
+the baseline level of a signal (see \codet{Analyzer::BASELINE}). Default is \codet{AVERAGE}\\[5pt]
+    Return: & None\\[5pt]
+    Arguments: &
+        \begin{tabular}[t]{@{\hspace{0em}}l@{}@{\hspace{1em}}p{8cm}l}
+            \codet{double T -} & length of the interval started from the beginning (in $\mu$s) used in the
+baseline calculation.
+        \end{tabular}\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{void Analyzer::SetBaselineMethod( Analyzer::BASELINE method )}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to choose how to calculate baseline of a signal\newline
+(see \codet{Analyzer::BASELINE})\\[5pt]
+    Return: & None\\[5pt]
+    Arguments: &
+        \begin{tabular}[t]{@{\hspace{0em}}l@{}@{\hspace{1em}}p{8cm}l}
+            \codet{Analyze::BASELINE method - } & enumerated method's name
+        \end{tabular}\\
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{double Analyzer::GetGateInterval() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to get time difference between limits of integration\\[5pt]
+    Return: & Length of integration interval (in $\mu$s)\quad(\codet{double})\\[5pt]
+    Arguments: & None\\ 
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{double Analyzer::GetIntegralStart() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to get left limit of integration\\[5pt]
+    Return: & Start of integration (in $\mu$s)\quad(\codet{double})\\[5pt]
+    Arguments: & None\\ 
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{double Analyzer::GetIntegralStop() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to get right limit of integration\\[5pt]
+    Return: & End of integration (in $\mu$s)\quad(\codet{double})\\[5pt]
+    Arguments: & None\\ 
+    \bottomrule
+\end{tabularx}
+
+\newpage
+\codet{double Analyzer::GetBaseline() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to get baseline (zero level) of a signal\\[5pt]
+    Return: & Baseline level (in mV)\quad(\codet{double})\\[5pt]
+    Arguments: & None\\ 
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{Point Analyzer::GetMaxPoint() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to get the point with the maximum positive displacement from baseline\\[5pt]
+    Return: & Maximum positive point (\codet{Point})\\[5pt]
+    Arguments: & None\\ 
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{Point Analyzer::GetMinPoint() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to get the point with the maximum negative displacement from baseline\\[5pt]
+    Return: & Maximum negative point (\codet{Point})\\[5pt]
+    Arguments: & None\\ 
+    \bottomrule
+\end{tabularx}
+
+
+\vspace{0.5cm}
+\codet{double Analyzer::GetPkPk() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to get voltage difference between positive and negative extremum in a waveform.\\[5pt]
+    Return: & Peak-to-peak value (in mV)\quad(\codet{double})\\[5pt]
+    Arguments: & None\\ 
+    \bottomrule
+\end{tabularx}
+
+\vspace{0.5cm}
+\codet{double Analyzer::GetIntegral() const}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to get result of integration\\[5pt]
+    Return: & Integral value (in mV$\cdot\mu$s)\quad(\codet{double})\\[5pt]
+    Arguments: & None\\ 
+    \bottomrule
+\end{tabularx}
+
+\newpage
+\subsection{class \codet{CaenTreeCreator} (ROOT)}\label{ssec:ref:tree}
+\subsubsection*{Description}
+
+\hspace{\parindent} This class is used to create a \codet{TTree} from binaries
+
+\subsubsection*{\codet{public enum}s}
+
+\hspace{\parindent}\codet{CaenTreeCreator::SAMPLE}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Should be used to choose what directories to include when constructing
+    a tree. See the \codet{CaenTreeCreator::CreateTree} function\\
+    Values: & \codet{ALL, INCLUDE, EXCLUDE}\\
+    \bottomrule
+\end{tabularx}
+\vspace{1cm}
+
+\subsubsection*{\codet{public} members}
+\hspace{\parindent}\codet{CaenTreeCreator::CaenTreeCreator( caen::Board board, const std::string\& pathToDataDir, const std::string\& pathToTreeFile, const std::string\& treeFileName )}
+
+\begin{tabularx}{\textwidth}{rp{12cm}}
+    \toprule
+    Description: & Constructor\\
+    Arguments: &
+        \begin{tabular}[t]{@{\hspace{0em}}l@{}@{\hspace{1em}}l@{}l}
+            \codet{caen::Board board} & - ADC model\\ & Must be of the same model as the one\\ & used to record data\\
+            \codet{const std::string\& pathToDataDir} & - A valid path to the data directory (see Sec.\ref{ssec:ROOT})\\
+            \codet{const std::string\& pathToTreeFile} & - A valid path where the \codet{.root} file will be placed\\
+            \codet{const std::string\& treeFileName} & - Name of the \codet{.root} file 
+            with the resulting \codet{Tree}s
+            \\ & (without an extension)\\
+        \end{tabular}\\
+    \bottomrule
+\end{tabularx}
+\vspace{1cm}
+
+\codet{void CaenTreeCreator::SetPathToDataDir( const std::string\& pathToDataDir )}
+
+\begin{tabularx}{\textwidth}{rp{11cm}}
+    \toprule
+    Description: & Should be used to set path to the data directory\\
+    Return: & None \\
+    Arguments: &
+        \begin{tabular}[t]{@{\hspace{0em}}l@{}@{\hspace{1em}}l@{}l}
+            \codet{const std::string\& pathToDataDir} & - A valid path to the directory
+            which will be used\\
+            & to iterate through to create \codet{TTree}s\\
+        \end{tabular}\\
+    \bottomrule
+\end{tabularx}
+\vspace{1cm}
+
+\codet{void CaenTreeCreator::SetPathToTreeFile( const std::string\& pathToTreeFile )}
+
+\begin{tabularx}{\textwidth}{rp{11cm}}
+    \toprule
+    Description: & Should be used to set path to the file with the
+    resulting \codet{TTree}s\\
+    Return: & None \\
+    Arguments: &
+        \begin{tabular}[t]{@{\hspace{0em}}l@{}@{\hspace{1em}}l@{}l}
+            \codet{const std::string\& pathToTreeFile} & - A valid path where the \codet{.root} file with
+            \\
+            & the resulting \codet{TTree}s will be placed\\
+        \end{tabular}\\
+    \bottomrule
+\end{tabularx}
+\vspace{1cm}
+
+\codet{void CaenTreeCreator::SetTreeFileName( const std::string\& treeFileName )}
+
+\begin{tabularx}{\textwidth}{rp{11cm}}
+    \toprule
+    Description: & Should be used to set the name of the resulting \codet{.root} file to which the
+    resulting \codet{Tree}s will be written\\
+    Return: & None \\
+    Arguments: &
+        \begin{tabular}[t]{@{\hspace{0em}}l@{}@{\hspace{1em}}l@{}l}
+            \codet{const std::string\& treeFileName} & - Name of the file (without an extension)\\
+        \end{tabular}\\
+    \bottomrule
+\end{tabularx}
+\vspace{1cm}
+
+\newpage
+\codet{void CaenTreeCreator::SetIntervals( Double\tus t baselineTime, Double\tus t integralStart, Double\tus t integralStop )}
+
+\begin{tabularx}{\textwidth}{rp{11cm}}
+    \toprule
+    Description: & Should be used to set the analysis config \\
+    Return: & None \\
+    Arguments: &
+        \begin{tabular}[t]{@{\hspace{0em}}l@{}@{\hspace{1em}}l@{}l}
+            \codet{Double\tus t baselineTime} & - the right edge\\
+            & of the interval for the baseline calculation\\
+            \codet{Double\tus t integralStart} & - time to start integration\\
+            \codet{Double\tus t integralStop} & - time to stop integration\\
+        \end{tabular}\\
+    \bottomrule
+\end{tabularx}
+\vspace{1cm}
+
+\codet{std::string CaenTreeCreator::GetPathToDataDir() const}
+
+\begin{tabularx}{\textwidth}{rp{11cm}}
+    \toprule
+    Description: & Should be used to get current path to the data directory\\
+    Return: & Path to the data directory\\ 
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+\vspace{1cm}
+
+\codet{std::string CaenTreeCreator::GetPathToTreeFile() const}
+
+\begin{tabularx}{\textwidth}{rp{11cm}}
+    \toprule
+    Description: & Should be used to get current path to the file with the
+    resulting \codet{TTree}s\\
+    Return: & Path to the file\\ 
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+\vspace{1cm}
+
+\codet{std::string CaenTreeCreator::GetTreeFileName() const}
+
+\begin{tabularx}{\textwidth}{rp{11cm}}
+    \toprule
+    Description: & Should be used to get the current name of the file which the resulting \codet{TTree}s to write to\\
+    Return: & Name of the file (without an extension)\\ 
+    Arguments: & None\\
+    \bottomrule
+\end{tabularx}
+\vspace{1cm}
+
+\newpage
+%\begin{lstlisting}
+%void GetListOfFiles( std::vector< std::string >& fileNames,
+%                     bool fullPath = true,
+%                     std::string pathToParentDir = "" ) const
+%\end{lstlisting}
+%\begin{tabularx}{\textwidth}{rp{11cm}}
+%    \toprule
+%    Description: & \\
+%    Return: & \\ 
+%    Arguments: &
+%        \begin{tabular}[t]{@{\hspace{0em}}l@{}@{\hspace{1em}}l@{}l}
+%            \codet{std::vector< std::string >\& fileNames} & -\\
+%            \codet{bool fullPath} & -\\
+%            \codet{std::string pathToParentDir} & -\\
+%        \end{tabular}\\
+%    \bottomrule
+%\end{tabularx}
+%\vspace{1cm}
+
+\codet{void CaenTreeCreator::CreateTree( SAMPLE mode = ALL, const std::string\& target = "" )}
+
+\begin{tabularx}{\textwidth}{rp{11cm}}
+    \toprule
+    Description: & Create a \codet{TTree} from binaries\\
+    Return: & None \\ 
+    Arguments: &
+        \begin{tabular}[t]{@{\hspace{0em}}l@{}@{\hspace{1em}}l@{}l}
+            \codet{mode} & - \codet{CaenTreeCreator::SAMPLE::ALL},\\
+            & \codet{CaenTreeCreator::SAMPLE::INCLUDE}\\
+            & or \codet{CaenTreeCreator::SAMPLE::EXCLUDE}\\
+            \codet{target} & - target directory name which is used to
+            create a \codet{TTree}:\\
+            & if the first argument \codet{mode} is \codet{CaenTreeCreator::SAMPLE::ALL} then this\\
+            & argument is ignored and all the subdirectories will be used.\\
+            & If \codet{mode} is \codet{CaenTreeCreator::SAMPLE::INCLUDE} then only the directory\\
+            & named \codet{target} will be used.\\
+            & If \codet{mode} is \codet{CaenTreeCreator::SAMPLE::EXCLUDE} then all the directories\\
+            & will be used except the one named \codet{target}\\
+        \end{tabular}\\
+    \bottomrule
+\end{tabularx}
+\vspace{1cm}
+
