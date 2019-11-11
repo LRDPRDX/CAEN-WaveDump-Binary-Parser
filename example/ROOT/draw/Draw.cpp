@@ -48,7 +48,7 @@ void Draw()
         leg->SetFillColor( kBlack );
         leg->SetLineColor( kWhite );
         leg->SetTextColor( kWhite );
-        leg->AddEntry( g, "Data", "f" );
+        leg->AddEntry( g, "Data", "pl" );
         leg->AddEntry( bl, "Baseline", "l" );
 
     g->Draw( "APL" );
