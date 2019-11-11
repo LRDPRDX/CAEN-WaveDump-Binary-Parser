@@ -1,0 +1,34 @@
+\newpage
+\section{Introduction}
+CAEN provides several softwares that a digitizer can run for data acquisition: DPP-CI
+(now deprecated), DPP-PSD, CAENScope, \href{https://www.caen.it/products/caen-wavedump/}{WaveDump} (https://www.caen.it/products/caen-wavedump/) (hereinafter the \blt{WD}), etc. The
+software described in this document is designed to work with the data acquired with
+\blt{WD} software. \blt{WD} allows user to save the acquired data in two formats: either
+binary or ASCII. Since saving data in binary format provides higher record rate and
+more information about the data, and takes less space on disk, one should choose it in
+order to get better performance in case when analysis of large number of events is 
+needed (for example, to get integral spectrum or average waveform).
+
+However, parsing of binary files requires a bit more complicated algorithms comparing with those needed in 
+case of using ASCII files. So this software is intended to provide a simple C++ interface
+to work with \blt{WD}'s binary data files. Moreover, this software can be easily ''extended''
+by user in the following sense. Each event consisting of data points (or a waveform) and 
+some additional info is represented by and accessible through the \codet{Event} class (described below).
+This allows user to write his/her own functions to perform any kind of analysis on an event
+using only \codet{Event} object which stores given event.
+
+\Warning{This software is NOT considered to work with ASCII files. So use it only
+with binaries produced by the \blt{WD} software.}
+
+Operating CAEN digitizer with \blt{WD} software for data acqusition requires a
+configuration file containing device settings. This file is just a text file which
+(mostly) consists of lines like this 
+
+\begin{lstlisting}
+<parameter> <value>
+\end{lstlisting}
+that define digitizer's behavior.
+
+Of course, it is possible to create such file directly using a text editor just once
+and any time another configuration is needed just copy and change it. However, it would be
+a bit more convenient to have a tool that constructs configuration file automatically.

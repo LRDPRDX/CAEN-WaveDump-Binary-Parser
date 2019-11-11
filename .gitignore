@@ -1,0 +1,12 @@
+/test
+/obj
+/lib
+/src/ROOT/Drawer
+/inc/ROOT/Drawer
+/src/ROOT/CaenTreeCreator/CaenTreeCreator_*
+/example/ROOT/create_tree/CreateTree_*
+/example/ROOT/draw/Draw_*
+/example/stand-alone/analyze_event/analyze_event
+/example/stand-alone/read_event/read_event
+*.sw*
+*.sw*
