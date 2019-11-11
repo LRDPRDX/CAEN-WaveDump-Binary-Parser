@@ -14,7 +14,7 @@
 void Draw()
 {
     caen::Parser p( caen::Board::N6720 );
-        p.SetPathToFile( "../../data/single/single.dat" );
+        p.SetPathToFile( "../../../data/single/single.dat" );
     caen::Event e;
  
  
@@ -52,7 +52,7 @@ void Draw()
         leg->AddEntry( bl, "Baseline", "l" );
 
     g->Draw( "APL" );
-        g->GetXaxis()->SetTitle( "time, ns" );
+        g->GetXaxis()->SetTitle( "time, us" );
         g->GetYaxis()->SetTitle( "amplitude, mV" );
         g->GetXaxis()->SetTitleColor( kWhite );
         g->GetXaxis()->SetAxisColor( kWhite );
