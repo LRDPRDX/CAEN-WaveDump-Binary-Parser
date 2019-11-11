@@ -1,6 +1,10 @@
 /test
 /obj
 /lib
+/doc/users_guide.aux
+/doc/users_guide.toc
+/doc/users_guide.log
+/doc/users_guide.out
 /src/ROOT/Drawer
 /inc/ROOT/Drawer
 /src/ROOT/CaenTreeCreator/CaenTreeCreator_*
