@@ -6,9 +6,9 @@ This library is *not* an official CAEN software. Don't use it with ASCII data fi
 
 #System requirements
 ## Stand-alone usage
-    * gcc >= 4.7
+ * gcc >= 4.7
 ## ROOT-based classes (`CaenTreeCreator`)
-    * gcc >= 5.3
+ * gcc >= 5.3
 
 # Installation
 For the installation process see the documentation (Sec. **Installation**)
