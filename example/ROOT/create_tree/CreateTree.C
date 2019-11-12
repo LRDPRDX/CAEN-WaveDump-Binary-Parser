@@ -4,6 +4,7 @@
 
 void CreateTree()
 {
+<<<<<<< HEAD
     CaenTreeCreator tc( caen::Board::N6720, //N6720 
                         "../../../data/",   //data dir
                         "./",               //place the TTree in the current dir
@@ -13,4 +14,14 @@ void CreateTree()
 
     //create a TTree only from the one directory "mult" in the data directory
     tc.CreateTree( CaenTreeCreator::INCLUDE, "mult" );
+=======
+    CaenTreeCreator tc( caen::Board::N6720,
+                        "../../../data/",
+                        "./",
+                        "myFirstTree" );
+
+    tc.SetIntervals( 0.03, 0.03, 1 );
+
+    tc.CreateTree();
+>>>>>>> 8cb2038e5750cfb36560e640fc80ff40503f2d94
 }
