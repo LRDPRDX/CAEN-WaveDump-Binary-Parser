@@ -8,12 +8,13 @@ information about each event recorded in the binary file:
  * Header of a binary file (see WaveDump documentation)
  * Data points
  * Time step between two consecutive data points (sample time)
- * ... 
+ * ... (for the full list of abilities see the documentation)
+
 Moreover, this software can be easily ''extended''
 by user in the following sense. Each event consisting of data points (or a waveform) and 
-some additional info is represented by and accessible through the \codet{Event} class (described in the documentation).
+some additional info is represented by and accessible through the `Event` class (described in the documentation).
 This allows user to write his/her own functions to perform any kind of analysis on an event
-using only \codet{Event} object which stores a given event.
+using only `Event` object which stores a given event.
 
 # Disclaimer
 This library is *not* an official CAEN software. Don't use it with ASCII data files produced by the WaveDump software.
