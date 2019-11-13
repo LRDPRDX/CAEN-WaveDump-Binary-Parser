@@ -22,6 +22,7 @@ This library is *not* an official CAEN software. Don't use it with ASCII data fi
 # System requirements
 ## Stand-alone usage
  * gcc >= 4.7
+
 ## ROOT-based classes (`CaenTreeCreator`)
  * gcc >= 5.3
 
@@ -40,7 +41,7 @@ Report bugs or suggest to paradox1859@gmail.com
 # TODO's
 - [ ] Add a user-independent algorithm to calculate the baseline
 - [ ] Create a class to draw waveforms
-- [ ] Add a real example of using `CaenTreeCreator` 
+- [x] Add a real example of using `CaenTreeCreator` 
 
 # Test plot
 As a test you can see the plot of a single signal from the PMT with NaI:Tl crystal on the input
