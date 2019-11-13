@@ -14,23 +14,24 @@
 void Draw()
 {
     caen::Parser p( caen::Board::N6720 );
-        p.SetPathToFile( "../../../data/single/single.dat" );
+        p.SetPathToFile( "../../../data/mult/wave0.dat" );
     caen::Event e;
  
  
     p.ReadEvent( e );
+    p.ReadEvent( e );
     e.Print();
  
     caen::Analyzer a;
-        a.SetBaselineInterval( 0.02 );
-        a.SetGate( 0.2, 0.8 );
+        a.SetBaselineInterval( 0.1 );
+        //we don't need to integrate here that is why there is no SetGate()
     a.Analyze( e );
+
+    TCanvas* c = new TCanvas;
+        c->SetGrid();
     
     TGraph* g = new TGraph( e.GetSize() );
-        g->SetLineColor( 9 );
-        g->SetMarkerStyle( 9 );
-        g->SetMarkerColor( 9 );
-        g->SetFillColor( 9 );
+        g->SetMarkerStyle( 7 );
  
     TLine* bl = new TLine( 0., 0., e.GetLength(), 0. );
         bl->SetLineColor( kRed );
@@ -40,26 +41,17 @@ void Draw()
                 g->SetPoint( std::distance( e.cbegin(), point ), point->time, point->voltage - a.GetBaseline() );
     }
 
-    TCanvas* c = new TCanvas;
-        c->SetGrid();
-        c->SetFillColor( kBlack );
-
     TLegend* leg = new TLegend( 0.8, 0.9, 0.9, 0.8 );
-        leg->SetFillColor( kBlack );
-        leg->SetLineColor( kWhite );
-        leg->SetTextColor( kWhite );
         leg->AddEntry( g, "Data", "pl" );
         leg->AddEntry( bl, "Baseline", "l" );
 
     g->Draw( "APL" );
+        //decoration
         g->GetXaxis()->SetTitle( "time, us" );
+        g->GetXaxis()->CenterTitle( kTRUE );
         g->GetYaxis()->SetTitle( "amplitude, mV" );
-        g->GetXaxis()->SetTitleColor( kWhite );
-        g->GetXaxis()->SetAxisColor( kWhite );
-        g->GetXaxis()->SetLabelColor( kWhite );
-        g->GetYaxis()->SetTitleColor( kWhite );
-        g->GetYaxis()->SetAxisColor( kWhite );
-        g->GetYaxis()->SetLabelColor( kWhite );
+        g->GetYaxis()->CenterTitle( kTRUE );
+
     bl->Draw( "same" );
     leg->Draw( "same" );
 }
