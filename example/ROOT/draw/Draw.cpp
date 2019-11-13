@@ -9,10 +9,13 @@
 #include <TLine.h>
 #include <TH1F.h>
 #include <TLegend.h>
+#include <TStyle.h>
  
  
 void Draw()
 {
+    gStyle->SetOptTitle( 0 );
+
     caen::Parser p( caen::Board::N6720 );
         p.SetPathToFile( "../../../data/mult/wave0.dat" );
     caen::Event e;
