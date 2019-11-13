@@ -38,7 +38,7 @@ The documentation is available [here](https://github.com/LRDPRDX/CAEN-Binary-Par
 Report bugs or suggest to paradox1859@gmail.com
 
 # TODO's
-- [ ] Add user-independent algorithm to calculate the baseline
+- [ ] Add a user-independent algorithm to calculate the baseline
 - [ ] Create a class to draw waveforms
 - [ ] Add a real example of using `CaenTreeCreator` 
 
