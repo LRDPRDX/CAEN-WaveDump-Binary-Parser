@@ -17,12 +17,14 @@ void Draw()
     gStyle->SetOptTitle( 0 );
 
     caen::Parser p( caen::Board::N6720 );
-        p.SetPathToFile( "../../../data/mult/wave0.dat" );
+        p.SetPathToFile( "../../../data/NaITl/wave0.dat" );
     caen::Event e;
  
  
-    p.ReadEvent( e );
-    p.ReadEvent( e );
+    //Two reads below is to find an "interesting" waveform
+    //The first one is not an "interesting" one
+    p.ReadEvent( e );//background
+    p.ReadEvent( e );//signal (NaI:Tl scintillation curve)
     e.Print();
  
     caen::Analyzer a;
