@@ -43,10 +43,10 @@ Report bugs or suggest to paradox1859@gmail.com
 - [ ] Add a real example of using `CaenTreeCreator` 
 
 # Test plot
-As a test you can see the plot of the signal from the PMT with NaI:Tl crystal on the input
-window with Cs<sup>137</sup> gamma-source (the code is available
-here: `example/ROOT/draw/`) and integral spectrum of that record (the code for `TTree`
-creation is available here: `example/ROOT/create_tree`):
+As a test you can see the plot of single signal from the PMT with NaI:Tl crystal on the input
+window with Cs<sup>137</sup> gamma-source (left image, the code is available
+here: `example/ROOT/draw/`) and integral spectrum of those signals (right image, the code for `TTree`
+creation is available here: `example/ROOT/create_tree/`):
 <p float="center">
   <img src="https://github.com/LRDPRDX/CAEN-Binary-Parser/blob/master/pictures/example/naitl_wf.png" height="250">
   <img src="https://github.com/LRDPRDX/CAEN-Binary-Parser/blob/master/pictures/example/naitl_spectrum.png" height="250">
