@@ -32,7 +32,7 @@ For the installation process see the documentation (Sec. **Installation**)
 For the usage see the documentation (Sec. **Usage**)
 
 # Documentation
-The documentation is available here: `doc/users_guide.pdf`
+The documentation is available [here](https://github.com/LRDPRDX/CAEN-Binary-Parser/blob/master/doc/users_guide.pdf)
 
 # Feedback
 Report bugs or suggest to paradox1859@gmail.com
