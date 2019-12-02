@@ -24,6 +24,7 @@ This library is *not* an official CAEN software. Don't use it with ASCII data fi
  * gcc >= 4.7
 
 ## ROOT-based classes (`CaenTreeCreator`)
+ * [ROOT](https://root.cern.ch/)
  * gcc >= 5.3
 
 # Installation
@@ -33,7 +34,7 @@ For the installation process see the documentation (Sec. **Installation**)
 For the usage see the documentation (Sec. **Usage**)
 
 # Documentation
-The documentation is available [here](https://github.com/LRDPRDX/CAEN-Binary-Parser/blob/master/doc/users_guide.pdf)
+The documentation is available [here](/doc/users_guide.pdf)
 
 # Feedback
 Report bugs or suggest to paradox1859@gmail.com
