@@ -9,7 +9,7 @@ void CreateTree()
                         "./",               //place the TTree in the current dir
                         "myFirstTree" );    //name the TTree as "myFirstTree"
 
-    tc.SetIntervals( 0.1, 0.1, 2 );//baseline - from 0 to 50 ns; integral - from 100ns to 2us 
+    tc.SetIntervals( 0.1, 0.1, 2 );//baseline - from 0 to 100 ns; integral - from 100ns to 2us 
 
     //create a TTree only from the one directory "NaITl" in the data directory
     tc.CreateTree( CaenTreeCreator::INCLUDE, "NaITl" );

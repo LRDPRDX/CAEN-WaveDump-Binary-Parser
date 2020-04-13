@@ -65,14 +65,14 @@ void CaenTreeCreator::GetListOfSamples( std::vector< std::string >& sampleNames,
 
     try
     {
-        if( fs::exists( fPathToDataDir ) && fs::is_directory( fPathToDataDir ) )
+        if( b_fs::exists( fPathToDataDir ) && b_fs::is_directory( fPathToDataDir ) )
         {
-            fs::directory_iterator iter( fPathToDataDir );
-            fs::directory_iterator end;
+            b_fs::directory_iterator iter( fPathToDataDir );
+            b_fs::directory_iterator end;
 
             while( iter != end )
             {
-                if( fs::is_directory( iter->path() ) ) 
+                if( b_fs::is_directory( iter->path() ) ) 
                 {
                     if( fullPath )
                     {
@@ -80,10 +80,10 @@ void CaenTreeCreator::GetListOfSamples( std::vector< std::string >& sampleNames,
                     }
                     else
                     {
-                        sampleNames.push_back( iter->path().filename() ); }
+                        sampleNames.push_back( iter->path().filename().string() ); }
                 }
                 
-                std::error_code ec;
+                boost::system::error_code ec;
                 iter.increment( ec );
                 if( ec )
                 {
@@ -108,10 +108,10 @@ void CaenTreeCreator::GetListOfFiles( std::vector< std::string >& fileNames,
 
     try
     {
-        if( fs::exists( pathToParentDir ) && fs::is_directory( pathToParentDir ) )
+        if( b_fs::exists( pathToParentDir ) && b_fs::is_directory( pathToParentDir ) )
         {
-            fs::recursive_directory_iterator iter( pathToParentDir );
-            fs::recursive_directory_iterator end;
+            b_fs::recursive_directory_iterator iter( pathToParentDir );
+            b_fs::recursive_directory_iterator end;
 
             while( iter != end )
             {
@@ -123,11 +123,11 @@ void CaenTreeCreator::GetListOfFiles( std::vector< std::string >& fileNames,
                     }
                     else
                     {
-                        fileNames.push_back( iter->path().filename() );
+                        fileNames.push_back( iter->path().filename().string() );
                     }
                 }
                 
-                std::error_code ec;
+                boost::system::error_code ec;
                 iter.increment( ec );
                 if( ec )
                 {
