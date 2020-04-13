@@ -24,8 +24,8 @@ This library is *not* an official CAEN software. Don't use it with ASCII data fi
  * gcc >= 4.7
 
 ## ROOT-based classes (`CaenTreeCreator`)
- * [ROOT](https://root.cern.ch/)
- * gcc >= 5.3
+ * [ROOT 6](https://root.cern.ch/)
+ * Boost Filesystem Library 
 
 # Installation
 For the installation process see the documentation (Sec. **Installation**)
